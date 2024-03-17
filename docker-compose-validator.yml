@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  hybrid-validator:
+    build:
+      context: .
+      args:
+        VALIDATOR_PASSWORD: '1111'
+    restart: always
+    container_name: hybrid-validator-node
+    tty: true
