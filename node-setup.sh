@@ -48,7 +48,7 @@ task4(){
 
   if [[ $totalValidator -gt 0 ]]; then
       echo -e '\ncd /root/Core-Blockchain/' >>/etc/profile
-      echo -e '\nbash /root/Core-Blockchain/node-start.sh --validator' >>/etc/profile
+      echo -e '\nbash /root/Core-Blockchain/node-start.sh --validator "$VALIDATOR_PASSWORD"' >>/etc/profile
   fi
 
   if [[ $totalRpc -gt 0 ]]; then
@@ -105,7 +105,7 @@ task8(){
   i=1
   while [[ $i -le $totalValidator ]]; do
     echo -e "\n\n${GREEN}+-----------------------------------------------------------------------------------------------------+\n"
-    read -p "Enter password for validator $i:  " password
+    password="$1"  # Получаем пароль из аргумента
     echo $password >./chaindata/node$i/pass.txt
     ./node_src/build/bin/geth --datadir ./chaindata/node$i account new --password ./chaindata/node$i/pass.txt
     ((i += 1))
@@ -180,7 +180,7 @@ createRpc(){
 
 createValidator(){
   if [[ $totalValidator -gt 0 ]]; then
-      task8
+      task8 "$1"  # Передаем аргумент с паролем
   fi
    i=1
   while [[ $i -le $totalValidator ]]; do
@@ -197,7 +197,7 @@ fetchNsetIP(){
 finalize(){
   displayWelcome
   createRpc
-  createValidator
+  createValidator "$1"  
   labelNodes
   # fetchNsetIP
   displayStatus
@@ -322,4 +322,4 @@ fi
 
 
 # bootstraping
-finalize
+finalize "$1"
